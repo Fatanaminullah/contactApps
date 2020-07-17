@@ -15,6 +15,7 @@ const ListContactContainer = (props) => {
           renderListItem={props.renderList}
           listContact={props.listContact}
           onRowDidOpen={props.onRowDidOpen}
+          navigation={props.navigation}
         />
       </ScrollView>
       <AddButton onClick={props.onClickAddButton} />

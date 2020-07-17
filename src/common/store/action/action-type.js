@@ -1,2 +1,4 @@
 export const GET_LIST_CONTACT = 'GET_LIST_CONTACT';
+export const GET_DETAIL_CONTACT = 'GET_DETAIL_CONTACT';
+export const FILTER_DATA = 'FILTER_DATA';
 export const SET_LOADING = 'SET_LOADING';

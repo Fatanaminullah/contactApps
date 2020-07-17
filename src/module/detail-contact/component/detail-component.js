@@ -1,66 +1,120 @@
+/* eslint-disable prettier/prettier */
+/* eslint-disable react-native/no-inline-styles */
 import * as React from 'react';
 import {Button, Text} from 'native-base';
 import {View, Image, TextInput, TouchableOpacity} from 'react-native';
-import {heightPercentageToDP} from '../../../common/general-component/percentage-size';
-import addIcon from '../../../../assets/img/plus.png';
+import {
+  heightPercentageToDP,
+  widthPercentageToDP,
+} from '../../../common/general-component/percentage-size';
+import defaultAvatar from '../../../../assets/img/default-avatar.png';
+import bgProfile from '../../../../assets/img/account.png';
+import deleteIcon from '../../../../assets/img/delete.png';
+import edit from '../../../../assets/img/edit.png';
 
 const DetailComponent = (props) => {
+  const { detail } = props;
   return (
     <View>
+      <View>
+        <Image
+          source={bgProfile}
+          style={{width: '100%', height: heightPercentageToDP('30%')}}
+          resizeMode="cover"
+        />
+      </View>
       <View
         style={{
           padding: 10,
           justifyContent: 'center',
           alignItems: 'center',
-          height: heightPercentageToDP('40%'),
+          height: heightPercentageToDP('30%'),
         }}>
-        <TouchableOpacity
-            onPress={() => alert('aa')}
-        >
-            <Image
-            source={props.avatar}
-            style={{
-                width: 200,
-                borderRadius: 200,
-            }}
-            resizeMode="contain"
-            />
-        </TouchableOpacity>
+        <Image
+          source={{ uri: detail.photo }}
+          style={{
+            width: 185,
+            height: 185,
+            top: -150,
+            borderRadius: 100,
+          }}
+          // resizeMode="contain"
+        />
       </View>
       <View
         style={{
-          padding: 20,
+          width: '100%',
+          height: '100%',
+          top: -150,
         }}>
-        <TextInput
+        <View
           style={{
-            borderColor: '#ccc',
-            borderWidth: 1,
-            borderRadius: 10,
-            marginVertical: 10,
-            paddingLeft: 15,
-            padding: 10,
-          }}
-          placeholder="Name..."
-        />
-        <TextInput
-          style={{
-            borderColor: '#ccc',
-            borderWidth: 1,
-            borderRadius: 10,
-            marginVertical: 10,
-            paddingLeft: 15,
-            padding: 10,
-          }}
-          placeholder="Phone Number..."
-        />
-        <Button
-          iconLeft
-          bordered
-          onPress={() => alert('aaa')}
-          style={{borderRadius: 10, marginTop: 20, justifyContent: 'center'}}>
-          <Image source={addIcon} style={{width: 25}} resizeMode="contain" />
-          <Text>Add Contact</Text>
-        </Button>
+            justifyContent: 'center',
+            alignItems: 'center',
+            // borderRadius: 10,
+            // borderWidth: 1,
+            // borderColor: '#ccc',
+          }}>
+          <View
+            style={{
+              width: '100%',
+              justifyContent: 'center',
+              flexDirection: 'row',
+            }}>
+            <Text style={{fontSize: 26, color: '#0F3E3B', fontWeight: 'bold'}}>
+              {`${detail.firstName} ${detail.lastName}`}
+            </Text>
+          </View>
+          <View
+            style={{
+              width: '100%',
+              justifyContent: 'center',
+              flexDirection: 'row',
+            }}>
+            <Text style={{fontSize: 20, color: '#0F3E3B', fontWeight: 'bold'}}>
+              {detail.age} Years Old
+            </Text>
+          </View>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-around', paddingTop: 20 }}>
+            <Button
+              iconLeft
+              onPress={() => props.navigation.navigate('EditContact', { id: detail.id })}
+              style={{
+                width: widthPercentageToDP('35%'),
+                borderTopLeftRadius: 10,
+                borderBottomLeftRadius: 10,
+                marginTop: 20,
+                justifyContent: 'center',
+                backgroundColor: '#707070',
+                padding: 10
+              }}>
+              <Image
+                source={edit}
+                style={{width: 15}}
+                resizeMode="contain"
+              />
+              <Text>Edit</Text>
+            </Button>
+            <Button
+              iconLeft
+              style={{
+                width: widthPercentageToDP('35%'),
+                borderTopRightRadius: 10,
+                borderBottomRightRadius: 10,
+                marginTop: 20,
+                justifyContent: 'center',
+                backgroundColor: '#db4545',
+                padding: 10,
+              }}>
+              <Image
+                source={deleteIcon}
+                style={{width: 15}}
+                resizeMode="contain"
+              />
+              <Text>Delete</Text>
+            </Button>
+          </View>
+        </View>
       </View>
     </View>
   );

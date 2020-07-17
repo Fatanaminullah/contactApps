@@ -5,19 +5,29 @@ import {widthPercentageToDP} from '../../common/general-component/percentage-siz
 import {getListContact} from '../../common/store/action/action';
 import defaultAvatar from '../../../assets/img/default-avatar.png';
 import ListContactContainer from '../../module/list-contact/container/list-contact-container';
+import {request, PERMISSIONS} from 'react-native-permissions';
 
 class ListContactScreen extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      openedRow: '',
-      rowMap: {},
-    };
-  }
+  state = {
+    openedRow: '',
+    rowMap: {},
+  };
+  requestAll = async () => {
+    let cameraStatus, storageStatus, locStatus;
+    cameraStatus = await request(PERMISSIONS.ANDROID.CAMERA);
+    storageStatus = await request(PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE);
+    locStatus = await request(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION);
+    return {cameraStatus, storageStatus, locStatus};
+  };
   componentDidMount() {
-    // this.props.getListContact();
+    this.props.getListContact();
+    this.requestAll().then(
+      (res) => console.log('res', res),
+      (err) => console.log('err', err),
+    );
   }
-  onRowDidOpen = (rowKey) => {
+  onRowDidOpen = (rowKey, rowMap) => {
+    console.log('rowke', rowKey, rowMap)
     this.setState({openedRow: rowKey});
   };
   setRowMap = (item) => {
@@ -30,13 +40,18 @@ class ListContactScreen extends React.Component {
     }
   };
   onClickAddButton = () => {
-    this.props.navigation.navigate('AddContact', { screen: 'AddContact' });
-  }
+    this.props.navigation.navigate('AddContact', {screen: 'AddContact'});
+  };
   renderList = (items, rowMap) => {
     const {item} = items;
     this.setRowMap(rowMap);
     return (
       <TouchableHighlight
+        onPress={() =>
+          this.props.navigation.navigate('DetailContact', {
+            id: item.id,
+          })
+        }
         accessibilityLabel={`list-contact-${item.id}`}
         style={{
           backgroundColor: '#f5f5f5',
@@ -51,20 +66,20 @@ class ListContactScreen extends React.Component {
           }}>
           <View style={{alignItems: 'center', justifyContent: 'center'}}>
             <Image
-              source={item.avatar || defaultAvatar}
+              source={{uri: item.photo}}
               style={{
                 width: 60,
                 height: 60,
-                resizeMode: 'contain',
                 alignSelf: 'center',
                 justifyContent: 'center',
                 alignItems: 'center',
+                borderRadius: 100,
               }}
             />
           </View>
           <View style={{width: widthPercentageToDP('70%')}}>
-            <Text>{item.nama}</Text>
-            <Text>{item.phoneNumber}</Text>
+            <Text>{`${item.firstName} ${item.lastName}`}</Text>
+            <Text style={{marginTop: 5}}>{item.age} years old</Text>
           </View>
         </View>
       </TouchableHighlight>
@@ -77,6 +92,7 @@ class ListContactScreen extends React.Component {
         listContact={this.props.listContact}
         onRowDidOpen={this.onRowDidOpen}
         setRowMap={this.setRowMap}
+        navigation={this.props.navigation}
         onClickAddButton={this.onClickAddButton}
       />
     );

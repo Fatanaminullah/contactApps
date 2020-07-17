@@ -14,22 +14,25 @@ class SwipeableList extends Component {
   renderLeftButton = (index) => {
     const {leftButton} = this.props.dataSource;
     if (leftButton.length > 0) {
-      const result = leftButton.map((item, i) => (
-        <View style={[item.buttonStyle, {width: item.width}]}>
-          <TouchableOpacity
-            accessibilityLabel={
-              item.buttonId || `right-button-${i}-message-${index}`
-            }
-            onPress={() => {
-              item.events.onPress(index);
-            }}>
-            <Image
-              source={item.buttonImageSource}
-              style={[item.buttonImageStyle]}
-            />
-          </TouchableOpacity>
-        </View>
-      ));
+      const result = leftButton.map((item, i) => {
+        return(
+          <View style={[item.buttonStyle, {width: item.width}]}>
+            <TouchableOpacity
+              accessibilityLabel={
+                `${item.buttonId}-${index}` ||
+                `right-button-${i}-message-${index}`
+              }
+              onPress={() => {
+                item.events.onPress(index);
+              }}>
+              <Image
+                source={item.buttonImageSource}
+                style={[item.buttonImageStyle]}
+              />
+            </TouchableOpacity>
+          </View>
+        )
+      });
       return <View style={{flexDirection: 'row', height: 100}}>{result}</View>;
     } else {
       return <View />;
@@ -42,7 +45,8 @@ class SwipeableList extends Component {
         <TouchableOpacity
           style={[item.buttonStyle, {width: item.width}]}
           accessibilityLabel={
-            `${item.buttonId}-${index}` || `right-button-${i}-message-${index}`
+            `${item.buttonId}-${index}` ||
+            `right-button-${i}-message-${index}`
           }
           onPress={() => {
             item.events.onPress(index);
@@ -60,7 +64,7 @@ class SwipeableList extends Component {
   };
   renderHiddenItem = (items, rowMap) => {
     const {item} = items;
-    const id = item.key;
+    const id = item.id;
     return (
       <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
         {this.renderLeftButton(id)}
@@ -95,6 +99,7 @@ class SwipeableList extends Component {
       <SwipeListView
         data={list}
         closeOnRowBeginSwipe
+        closeOnRowOpen
         renderItem={renderRow}
         renderHiddenItem={this.renderHiddenItem}
         leftOpenValue={leftOpenWidth}
