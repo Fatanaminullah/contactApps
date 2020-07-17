@@ -61,10 +61,58 @@ export const getDetailContact = (request) => (dispatch) => {
 };
 
 export const editContact = (id, request) => (dispatch) => {
-  console.log('req', id, request)
+  console.log('req', id, request);
   return new Promise((resolve, reject) => {
     dispatch(setLoading(true));
-    url.put(`/contact/${id}`, {request}).then(
+    url
+      .put(`/contact/${id}`, {
+        firstName: request.firstName,
+        lastName: request.lastName,
+        age: request.age,
+        photo: request.photo,
+      })
+      .then(
+        (res) => {
+          dispatch(setLoading(false));
+          resolve();
+        },
+        (err) => {
+          dispatch(setLoading(false));
+          reject();
+          console.log('err edit', err);
+        },
+      );
+  });
+};
+export const addContact = (id, request) => (dispatch) => {
+  console.log('req', request);
+  return new Promise((resolve, reject) => {
+    dispatch(setLoading(true));
+    url
+      .post('/contact', {
+        firstName: request.firstName,
+        lastName: request.lastName,
+        age: request.age,
+        photo: request.photo,
+      })
+      .then(
+        (res) => {
+          dispatch(setLoading(false));
+          resolve();
+        },
+        (err) => {
+          dispatch(setLoading(false));
+          reject();
+          console.log('err add', err);
+        },
+      );
+  });
+};
+export const deleteContact = (id) => (dispatch) => {
+  return new Promise((resolve, reject) => {
+    console.log('delete id', id)
+    dispatch(setLoading(true));
+    url.delete(`/contact/${id}`).then(
       (res) => {
         dispatch(setLoading(false));
         resolve();
@@ -72,7 +120,7 @@ export const editContact = (id, request) => (dispatch) => {
       (err) => {
         dispatch(setLoading(false));
         reject();
-        console.log('err detail', err);
+        console.log('err delete', err);
       },
     );
   });

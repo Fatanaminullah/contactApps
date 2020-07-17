@@ -11,6 +11,7 @@ const Stack = createStackNavigator();
 
 export default class App extends React.Component {
   render() {
+    console.disableYellowBox = true;
     return (
       <NavigationContainer>
         <Stack.Navigator>

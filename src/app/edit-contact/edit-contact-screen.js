@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {getDetailContact, editContact} from '../../common/store/action/action';
+import {getDetailContact, editContact, getListContact} from '../../common/store/action/action';
 import FormComponent from '../../module/detail-contact/component/form-component';
+import ImagePicker from 'react-native-image-picker';
 
 class EditContactScreen extends Component {
   state = {
@@ -24,7 +25,8 @@ class EditContactScreen extends Component {
     }
     this.props.editContact(this.props.route.params.id, request).then((res) => {
       alert('Success!');
-      this.props.navigation.navigate('DetailContact', { id: this.props.route.params.id });
+      this.props.getListContact();
+      this.props.navigation.navigate('ListContact');
     }, (err) => alert('Failed!'));
   }
   componentDidMount() {
@@ -32,10 +34,34 @@ class EditContactScreen extends Component {
       this.setState(res);
     });
   }
+  pickImage = () => {
+    const options = {
+      title: 'Select Avatar',
+      storageOptions: {
+        skipBackup: true,
+        path: 'images',
+      },
+    };
+    ImagePicker.showImagePicker(options, (response) => {
+      console.log('Response = ', response);
+
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (response.error) {
+        console.log('ImagePicker Error: ', response.error);
+      } else {
+        const source = { uri: 'data:image/jpeg;base64,' + response.data };
+        this.setState({
+          photo: source.uri,
+        });
+      }
+    });
+  };
   render() {
     return (
       <FormComponent
         isEdit
+        pickImage={this.pickImage}
         detail={this.props.detailContact}
         onChangeValue={this.onChangeValue}
         form={this.state}
@@ -52,6 +78,7 @@ const mapStateToProps = (state) => ({
 const mapActionToProps = () => ({
   getDetailContact,
   editContact,
+  getListContact,
 });
 
 export default connect(mapStateToProps, mapActionToProps())(EditContactScreen);

@@ -3,6 +3,7 @@ import * as actionType from './../action/action-type';
 const initialState = {
   listContact: [],
   detailContact: {},
+  loading: false,
 };
 
 export default (state = initialState, action) => {

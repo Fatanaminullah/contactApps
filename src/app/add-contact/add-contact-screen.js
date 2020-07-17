@@ -1,22 +1,28 @@
 import React, {Component} from 'react';
+import {connect} from 'react-redux';
+import {addContact} from '../../common/store/action/action';
 import defaultAvatar from '../../../assets/img/default-avatar.png';
 import ImagePicker from 'react-native-image-picker';
 import FormComponent from '../../module/detail-contact/component/form-component';
 
 class AddContactScreen extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      avatar: defaultAvatar,
-    };
-  }
-
+  state = {
+    firstName: '',
+    lastName: '',
+    age: '',
+    photo: '',
+  };
+  onChangeValue = (e, field) => {
+    this.setState({
+      [`${field}`]: e,
+    });
+  };
   pickImage = () => {
     const options = {
       title: 'Select Avatar',
       storageOptions: {
         skipBackup: true,
-        path: '/',
+        path: 'images',
       },
     };
     ImagePicker.showImagePicker(options, (response) => {
@@ -26,25 +32,49 @@ class AddContactScreen extends Component {
         console.log('User cancelled image picker');
       } else if (response.error) {
         console.log('ImagePicker Error: ', response.error);
-      } else if (response.customButton) {
-        console.log('User tapped custom button: ', response.customButton);
       } else {
-        const source = {uri: response.uri};
-
-        // You can also display the image using data:
-        // const source = { uri: 'data:image/jpeg;base64,' + response.data };
-
+        const source = { uri: 'data:image/jpeg;base64,' + response.data };
         this.setState({
-          avatar: source,
+          photo: source.uri,
         });
       }
     });
   };
+  onSubmit = () => {
+    const request = {
+      firstName: this.state.firstName,
+      lastName: this.state.lastName,
+      age: parseInt(this.state.age),
+      photo: this.state.photo,
+    };
+    this.props.addContact(this.props.route.params.id, request).then(
+      (res) => {
+        alert('Success!');
+        this.props.getListContact();
+        this.props.navigation.navigate('ListContact');
+      },
+      (err) => alert('Failed!'),
+    );
+  };
   render() {
     return (
-      <FormComponent avatar={this.state.avatar} pickImage={this.pickImage} />
+      <FormComponent
+        isAdd
+        pickImage={this.pickImage}
+        onChangeValue={this.onChangeValue}
+        form={this.state}
+        onSubmit={this.onSubmit}
+      />
     );
   }
 }
 
-export default AddContactScreen;
+const mapStateToProps = (state) => ({
+  ...state.contact,
+});
+
+const mapActionToProps = () => ({
+  addContact,
+});
+
+export default connect(mapStateToProps, mapActionToProps())(AddContactScreen);

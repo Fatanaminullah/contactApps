@@ -42,7 +42,7 @@ const ListComponent = (props) => {
               height: 20,
             },
             events: {
-              //   onPress: (e) => this.props.onDeleteNotification(e),
+              onPress: (e) => props.onClickDelete(e),
             },
           },
         ],

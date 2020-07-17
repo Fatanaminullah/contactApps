@@ -9,10 +9,11 @@ import {
 } from 'react-native';
 import {heightPercentageToDP} from '../../../common/general-component/percentage-size';
 import addIcon from '../../../../assets/img/plus.png';
-import {formValueSelector} from 'redux-form';
+import defaultAvatar from '../../../../assets/img/default-avatar.png';
 
 const FormComponent = (props) => {
   const {detail, form} = props;
+  console.log('photo', `data:image/jpeg;base64${defaultAvatar}}`)
   return (
     <ScrollView>
       <View
@@ -24,7 +25,7 @@ const FormComponent = (props) => {
         }}>
         <TouchableOpacity onPress={() => props.pickImage()}>
           <Image
-            source={{uri: form.photo}}
+            source={form.photo ? { uri: `${form.photo}` } : defaultAvatar}
             style={{
               width: 200,
               height: 200,

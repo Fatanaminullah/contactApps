@@ -2,7 +2,7 @@ import * as React from 'react';
 import {TouchableHighlight, View, Text, Image} from 'react-native';
 import {connect} from 'react-redux';
 import {widthPercentageToDP} from '../../common/general-component/percentage-size';
-import {getListContact} from '../../common/store/action/action';
+import {getListContact, deleteContact} from '../../common/store/action/action';
 import defaultAvatar from '../../../assets/img/default-avatar.png';
 import ListContactContainer from '../../module/list-contact/container/list-contact-container';
 import {request, PERMISSIONS} from 'react-native-permissions';
@@ -42,6 +42,11 @@ class ListContactScreen extends React.Component {
   onClickAddButton = () => {
     this.props.navigation.navigate('AddContact', {screen: 'AddContact'});
   };
+  onClickDelete = (id) => {
+    this.props.deleteContact(id).then((res) => {
+      this.props.getListContact();
+    });
+  }
   renderList = (items, rowMap) => {
     const {item} = items;
     this.setRowMap(rowMap);
@@ -52,6 +57,7 @@ class ListContactScreen extends React.Component {
             id: item.id,
           })
         }
+        underlayColor="#eaeaea"
         accessibilityLabel={`list-contact-${item.id}`}
         style={{
           backgroundColor: '#f5f5f5',
@@ -66,7 +72,7 @@ class ListContactScreen extends React.Component {
           }}>
           <View style={{alignItems: 'center', justifyContent: 'center'}}>
             <Image
-              source={{uri: item.photo}}
+              source={item.photo !== 'N/A' ? {uri: item.photo} : defaultAvatar}
               style={{
                 width: 60,
                 height: 60,
@@ -94,6 +100,8 @@ class ListContactScreen extends React.Component {
         setRowMap={this.setRowMap}
         navigation={this.props.navigation}
         onClickAddButton={this.onClickAddButton}
+        onClickDelete={this.onClickDelete}
+        loading={this.props.loading}
       />
     );
   }
@@ -105,6 +113,7 @@ const mapStateToProps = (state) => ({
 
 const mapActionToProps = () => ({
   getListContact,
+  deleteContact,
 });
 
 export default connect(mapStateToProps, mapActionToProps())(ListContactScreen);
