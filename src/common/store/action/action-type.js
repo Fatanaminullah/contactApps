@@ -1,0 +1,2 @@
+export const GET_LIST_CONTACT = 'GET_LIST_CONTACT';
+export const SET_LOADING = 'SET_LOADING';
