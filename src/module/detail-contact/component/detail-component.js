@@ -93,10 +93,11 @@ const DetailComponent = (props) => {
                 style={{width: 15}}
                 resizeMode="contain"
               />
-              <Text>Edit</Text>
+              <Text style={{ color: '#fff' }}>Edit</Text>
             </Button>
             <Button
               iconLeft
+              onPress={() => props.onDelete(detail.id)}
               style={{
                 width: widthPercentageToDP('35%'),
                 borderTopRightRadius: 10,
@@ -111,7 +112,7 @@ const DetailComponent = (props) => {
                 style={{width: 15}}
                 resizeMode="contain"
               />
-              <Text>Delete</Text>
+              <Text style={{ color: '#fff' }}>Delete</Text>
             </Button>
           </View>
         </View>

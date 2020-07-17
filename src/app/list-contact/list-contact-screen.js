@@ -27,7 +27,6 @@ class ListContactScreen extends React.Component {
     );
   }
   onRowDidOpen = (rowKey, rowMap) => {
-    console.log('rowke', rowKey, rowMap)
     this.setState({openedRow: rowKey});
   };
   setRowMap = (item) => {

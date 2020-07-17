@@ -1,6 +1,9 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {getDetailContact} from '../../common/store/action/action';
+import {
+  getDetailContact,
+  deleteContact,
+} from '../../common/store/action/action';
 import DetailComponent from '../../module/detail-contact/component/detail-component';
 
 class DetailContactScreen extends Component {
@@ -8,7 +11,13 @@ class DetailContactScreen extends Component {
     this.props.getDetailContact(this.props.route.params.id);
   }
   render() {
-    return <DetailComponent navigation={this.props.navigation} detail={this.props.detailContact} />;
+    return (
+      <DetailComponent
+        navigation={this.props.navigation}
+        detail={this.props.detailContact}
+        onDelete={this.props.deleteContact}
+      />
+    );
   }
 }
 
@@ -17,7 +26,8 @@ const mapStateToProps = (state) => ({
 });
 
 const mapActionToProps = () => ({
-    getDetailContact, 
+  getDetailContact,
+  deleteContact,
 });
 
 export default connect(
